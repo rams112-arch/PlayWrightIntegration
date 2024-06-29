@@ -81,7 +81,7 @@ jobs:
         mv screenshots/*.png screenshots/screenshots_${{ github.sha }}_${{ matrix.browser }} || echo "No screenshots found to move."
 
     - name: Upload test reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: playwright-test-reports
         path: |
