@@ -72,9 +72,9 @@ jobs:
       run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
     - name: Run Playwright tests on ${{ matrix.browser }}
-      run:
+      run: |
         pytest --html=report_${{ matrix.browser }}.html --self-contained-html
-        mkdir screenshots
+        mkdir -p screenshots  # Use -p to avoid error if directory already exists
         mv screenshot*.png screenshots/
 
     - name: Upload test reports
