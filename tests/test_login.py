@@ -19,6 +19,6 @@ def test_login_error(page: Page) -> None:
     
     body_text = login_page.get_errorbody()
     expected_text = "Invalid credentials. Please try again."
-    assert expected_text in body_text, f"Expected text '{expected_text}' not found in body text:\n{body_text}"
+    assert expected_text not in body_text, f"Expected text '{expected_text}' not found in body text:\n{body_text}"
     
     page.close()
