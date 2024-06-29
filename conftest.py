@@ -48,15 +48,22 @@ def pytest_runtest_makereport(item, call):
 
     if report.when == "call" and report.failed:
         # Get the browser and page objects from the fixture scope
-        fixturemanager = item.session._fixturemanager
-        page = fixturemanager.getfixturevalue("page")
+        # Since the 'page' fixture is scoped 'function', it's not directly accessible here
+        # Instead, we should fetch it from the fixturemanager using a more direct approach
+        page = None
+        for fixture_name in item.fixturenames:
+            if fixture_name == 'page':
+                page = item._request.getfixturevalue(fixture_name)
+                break
 
-        # Capture screenshot
-        screenshot_dir = "screenshots"
-        os.makedirs(screenshot_dir, exist_ok=True)
-        screenshot_path = f"{screenshot_dir}/failed-{item.nodeid}.png"
-        page.screenshot(path=screenshot_path)
+        if page:
+            # Capture screenshot
+            screenshot_dir = "screenshots"
+            os.makedirs(screenshot_dir, exist_ok=True)
+            screenshot_path = f"{screenshot_dir}/failed-{item.nodeid}.png"
+            page.screenshot(path=screenshot_path)
 
-        # Optionally, log the screenshot path or further actions
-
-        print(f"\nScreenshot captured for {item.nodeid}: {screenshot_path}\n")
+            # Optionally, log the screenshot path or further actions
+            print(f"\nScreenshot captured for {item.nodeid}: {screenshot_path}\n")
+        else:
+            print(f"\nUnable to capture screenshot for {item.nodeid}: 'page' fixture not found\n")
