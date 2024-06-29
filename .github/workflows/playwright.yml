@@ -1,34 +1,50 @@
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.11'
+        python-version: '3.x'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
-    - name: Install pipenv
-      run: pip install pipenv
-    - name: Ensure browsers are installed
-      run: python -m playwright install --with-deps
-    - name: Run your tests
+        pip install pytest pytest-html playwright
+
+    - name: Install Playwright browsers
       run: |
-        pipenv install --dev
-        pipenv run pytest
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+        python -m playwright install
+
+    - name: Run Playwright tests on ${{ matrix.browser }}
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: 0
+      run: |
+        pytest --html=report_${{ matrix.browser }}.html --self-contained-html
+
+    - name: Upload test reports
+      uses: actions/upload-artifact@v2
       with:
-        name: playwright-traces
-        path: test-results/
+        name: playwright-test-reports
+        path: |
+          report_chromium.html
+          report_firefox.html
+          report_webkit.html
