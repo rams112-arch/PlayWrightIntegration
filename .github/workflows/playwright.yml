@@ -73,9 +73,19 @@ jobs:
 
     - name: Run Playwright tests on ${{ matrix.browser }}
       run: |
-        pytest --html=report_${{ matrix.browser }}.html --self-contained-html
-        mkdir -p screenshots  # Use -p to avoid error if directory already exists
+        pytest --html=report_${{ matrix.browser }}.html --self-contained-html || true
+        mkdir -p screenshots
         mv screenshot*.png screenshots/
+        mv report_${{ matrix.browser }}.html screenshots/
+
+    - name: Upload test reports and screenshots on failure
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: playwright-failed-tests
+        path: |
+          screenshots/
+          report_${{ matrix.browser }}.html
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
