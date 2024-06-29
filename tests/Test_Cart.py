@@ -50,5 +50,6 @@ def test_cart_product_validation(page:Page) -> None:
     product_info = cart_page.check_cart_products()
     product = product_info.split('-')
     quantity = product[2].split(':')
+    
     assert product_title in product[0], f"Unexpected text '{product_title}'"
     assert '2' in quantity[1], f"Unexpected text '{quantity[1]}'"
