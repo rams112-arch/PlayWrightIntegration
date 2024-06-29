@@ -55,7 +55,7 @@ jobs:
     - name: Install Playwright and browsers
       run: |
         pip install playwright
-        sudo playwright install --with-deps
+        playwright install --with-deps
 
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
