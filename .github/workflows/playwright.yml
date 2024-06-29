@@ -81,9 +81,9 @@ jobs:
       if: always()  # Upload artifacts regardless of test outcome
       run: |
         mkdir -p screenshots  # Create directory if not exists
-        mv screenshots/*.png screenshots/screenshots_${{ github.sha }}_${{ matrix.browser }} || true  # Move any existing screenshots
-        mv screenshots/*.png screenshots/ || true  # Move any existing screenshots
-        mv screenshots/*.png screenshots/failed-tests-${{ github.sha }}-${{ matrix.browser }} || true
+        mv screenshots/*.png screenshots/screenshots_${{ github.sha }}_${{ matrix.browser }} || echo "No screenshots found to move."
+        mv screenshots/*.png screenshots/ || echo "No screenshots found to move."
+        mv screenshots/*.png screenshots/failed-tests-${{ github.sha }}-${{ matrix.browser }} || echo "No screenshots found to move."
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
