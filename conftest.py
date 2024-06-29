@@ -1,5 +1,6 @@
 import pytest
 import os
+import re
 from playwright.sync_api import sync_playwright
 
 # Fixture for setting up Playwright
@@ -48,8 +49,6 @@ def pytest_runtest_makereport(item, call):
 
     if report.when == "call" and report.failed:
         # Get the browser and page objects from the fixture scope
-        # Since the 'page' fixture is scoped 'function', it's not directly accessible here
-        # Instead, we should fetch it from the fixturemanager using a more direct approach
         page = None
         for fixture_name in item.fixturenames:
             if fixture_name == 'page':
@@ -57,10 +56,15 @@ def pytest_runtest_makereport(item, call):
                 break
 
         if page:
+            # Sanitize nodeid to be a valid filename
+            nodeid = item.nodeid.replace("::", "-").replace("/", "-").replace("\\", "-")
+            invalid_chars = r'[<>:"/\\|?*]'
+            nodeid = re.sub(invalid_chars, '_', nodeid)
+
             # Capture screenshot
             screenshot_dir = "screenshots"
             os.makedirs(screenshot_dir, exist_ok=True)
-            screenshot_path = f"{screenshot_dir}/failed-{item.nodeid}.png"
+            screenshot_path = f"{screenshot_dir}/failed-{nodeid}.png"
             page.screenshot(path=screenshot_path)
 
             # Optionally, log the screenshot path or further actions
