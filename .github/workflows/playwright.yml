@@ -77,14 +77,13 @@ jobs:
         mkdir -p screenshots
         mv screenshot*.png screenshots/
 
-    - name: Upload test reports and screenshots on failure
+    - name: Capture and upload screenshots on failure
       if: always()  # Upload artifacts regardless of test outcome
-      uses: actions/upload-artifact@v2
-      with:
-        name: playwright-test-results-${{ matrix.browser }}
-        path: |
-          screenshots/
-          report_${{ matrix.browser }}.html
+      run: |
+        mkdir -p screenshots  # Create directory if not exists
+        mv screenshots/*.png screenshots/screenshots_${{ github.sha }}_${{ matrix.browser }} || true  # Move any existing screenshots
+        mv screenshots/*.png screenshots/ || true  # Move any existing screenshots
+        mv screenshots/*.png screenshots/failed-tests-${{ github.sha }}-${{ matrix.browser }} || true
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
