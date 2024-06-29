@@ -31,13 +31,15 @@ def browser(playwright_instance, request):
 # Fixture for creating a new browser context for each test
 @pytest.fixture(scope="function")
 def context(browser):
-    context = browser.context.new()
+    # Create a new context within the current browser instance
+    context = browser.new_context()
     yield context
     context.close()
 
 # Fixture for creating a new page for each test
 @pytest.fixture(scope="function")
 def page(context):
+    # Create a new page within the current context
     page = context.new_page()
     yield page
     page.close()
