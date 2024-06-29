@@ -25,25 +25,46 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install Pipenv
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libwoff1 \
+          libopus0 \
+          libvpx-dev \
+          libevent-2.1-7 \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-libav \
+          gstreamer1.0-plugins-bad \
+          gstreamer1.0-plugins-ugly \
+          gstreamer1.0-alsa \
+          gstreamer1.0-pulseaudio \
+          libharfbuzz-icu0 \
+          libhyphen0 \
+          libmanette-0.2-0 \
+          libflite1 \
+          libgles2-mesa \
+          libx264-dev
+
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pipenv
+        pip install pytest pytest-html
 
-    - name: Install dependencies with Pipenv
-      run: |
-        pipenv install --dev  # Install from Pipfile.lock if it exists
+    - run: pip install pipenv
 
     - name: Install Playwright and browsers
       run: |
-        pipenv run python -m playwright install --with-deps
+        pip install playwright
+        python -m playwright install --with-deps
 
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
     - name: Run Playwright tests on ${{ matrix.browser }}
-      run: |
-        pipenv run pytest --html=report_${{ matrix.browser }}.html --self-contained-html
+      run:
+        pytest --html=report_${{ matrix.browser }}.html --self-contained-html
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
