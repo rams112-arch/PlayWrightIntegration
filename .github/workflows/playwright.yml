@@ -74,6 +74,8 @@ jobs:
     - name: Run Playwright tests on ${{ matrix.browser }}
       run:
         pytest --html=report_${{ matrix.browser }}.html --self-contained-html
+        mkdir screenshots
+        mv screenshot*.png screenshots/
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
