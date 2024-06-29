@@ -19,10 +19,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
+    - name: Install pipenv
+      run: pip install pipenv
     - name: Ensure browsers are installed
       run: python -m playwright install --with-deps
     - name: Run your tests
-      run: pytest --tracing=retain-on-failure
+      run: |
+        pipenv install --dev
+        pipenv run pytest
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
