@@ -57,6 +57,8 @@ jobs:
         pip install playwright
         python -m playwright install --with-deps
 
+    - name: Install Flask
+      run: pip install Flask
     - name: Start Flask server
       run: python store/app.py &
 
