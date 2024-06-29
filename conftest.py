@@ -49,7 +49,6 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed:
         # Get the browser and page objects from the fixture scope
         fixturemanager = item.session._fixturemanager
-        browser = fixturemanager.getfixturevalue("browser")
         page = fixturemanager.getfixturevalue("page")
 
         # Capture screenshot
