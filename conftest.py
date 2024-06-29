@@ -8,10 +8,19 @@ def playwright_instance():
         yield playwright
 
 # Fixture for launching the browser
-@pytest.fixture(scope="session")
-def browser(playwright_instance):
-    browser = playwright_instance.chromium.launch(headless=True)
+@pytest.fixture(scope="session", params=["chromium", "firefox", "webkit"])
+def browser(playwright_instance, request):
+    if request.param == "chromium":
+        browser = playwright_instance.chromium.launch(headless=True)
+    elif request.param == "firefox":
+        browser = playwright_instance.firefox.launch(headless=True)
+    elif request.param == "webkit":
+        browser = playwright_instance.webkit.launch(headless=True)
+    else:
+        raise ValueError(f"Unsupported browser: {request.param}")
+    
     yield browser
+    
     browser.close()
 
 # Fixture for creating a new browser context for each test
