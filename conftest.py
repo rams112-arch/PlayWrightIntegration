@@ -20,9 +20,9 @@ def browser(playwright_instance, request):
         browser = playwright_instance.webkit.launch(headless=True)
     else:
         raise ValueError(f"Unsupported browser: {request.param}")
-    
+
     yield browser
-    
+
     browser.close()
 
 # Fixture for creating a new browser context for each test
@@ -56,13 +56,16 @@ def pytest_runtest_makereport(item, call):
                 break
 
         if page:
+            # Determine the browser name from the test item
+            browser_name = item.callspec.params.get("browser", None)
+
             # Sanitize nodeid to be a valid filename
             nodeid = item.nodeid.replace("::", "-").replace("/", "-").replace("\\", "-")
             invalid_chars = r'[<>:"/\\|?*]'
             nodeid = re.sub(invalid_chars, '_', nodeid)
 
             # Capture screenshot
-            screenshot_dir = "screenshots"
+            screenshot_dir = f"screenshots/{browser_name}"
             os.makedirs(screenshot_dir, exist_ok=True)
             screenshot_path = f"{screenshot_dir}/failed-{nodeid}.png"
             page.screenshot(path=screenshot_path)
