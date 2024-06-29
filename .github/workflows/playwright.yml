@@ -70,7 +70,7 @@ jobs:
 
     - name: Run Playwright tests on ${{ matrix.browser }}
       run: |
-        pytest --html=report_${{ matrix.browser }}.html --self-contained-html || true
+        pytest --html=report_${{ matrix.browser }}.html --self-contained-html -s -v --browser ${{ matrix.browser }}
         mkdir -p screenshots
         mv screenshot*.png screenshots/
 
@@ -85,5 +85,7 @@ jobs:
       with:
         name: playwright-test-reports
         path: |
-          report.html
+          report_chromium.html
+          report_firefox.html
+          report_webkit.html
           screenshots/
