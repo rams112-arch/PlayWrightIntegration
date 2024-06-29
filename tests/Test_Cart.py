@@ -20,6 +20,7 @@ def test_add_to_cart_navigation(page: Page) -> None:
     
     home_page = ProductListingPage(page)
     home_page.get_page_title
+    
     assert home_page.get_page_title().is_visible(), "Assertion failed: <h1> element is not visible."
 
 def test_cart_product_validation(page:Page) -> None:
