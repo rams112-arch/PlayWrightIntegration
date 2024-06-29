@@ -19,13 +19,8 @@ def browser(playwright_instance, request):
     else:
         raise ValueError(f"Unsupported browser: {request.param}")
     
-    page = browser.new_page()
-    yield page
+    yield browser
     
-    if request.node.rep_call.failed:
-        page.screenshot(path=f"screenshots/failed-{request.node.name}.png")
-    
-    page.close()
     browser.close()
 
 # Fixture for creating a new browser context for each test
