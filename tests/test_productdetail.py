@@ -13,6 +13,7 @@ def test_login(page: Page):
 def test_product_navigation(page: Page) -> None:
     home_page = ProductListingPage(page)
     title = home_page.get_product_name()
+    
     home_page.navigate_to_detail()
     
     product_detail_page = ProductDetailPage(page)
