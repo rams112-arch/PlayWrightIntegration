@@ -85,7 +85,5 @@ jobs:
       with:
         name: playwright-test-reports
         path: |
-          report_chromium.html
-          report_firefox.html
-          report_webkit.html
+          report.html
           screenshots/
