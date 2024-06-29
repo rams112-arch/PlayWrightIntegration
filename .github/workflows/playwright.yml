@@ -53,6 +53,9 @@ jobs:
         pip install pytest pytest-html
 
     - run: pip install pipenv
+
+    - run: pip install Flask
+
     - name: Start Flask server
       run: python store/app.py &
 
