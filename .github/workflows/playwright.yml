@@ -20,6 +20,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
+        apt-get install -y libnss3 libasound2 libgbm-dev
     - name: Install pipenv
       run: pip install pipenv
     - name: Ensure browsers are installed
