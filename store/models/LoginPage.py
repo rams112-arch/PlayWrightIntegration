@@ -9,7 +9,7 @@ class LoginPage:
         self.error_body = page.locator('body')
 
     def navigate(self):
-        self.page.goto("http://127.0.0.1:8000")
+        self.page.goto("http://127.0.0.1:5000")
 
     def perform_login(self):
         self.username_input.fill('testuser')
