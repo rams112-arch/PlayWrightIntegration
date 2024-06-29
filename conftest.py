@@ -1,4 +1,5 @@
 import pytest
+import os
 from playwright.sync_api import sync_playwright
 
 # Fixture for setting up Playwright
@@ -38,3 +39,25 @@ def page(context):
     page = context.new_page()
     yield page
     page.close()
+
+# pytest hook to capture screenshots on test failure
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        # Get the browser and page objects from the fixture scope
+        fixturemanager = item.session._fixturemanager
+        browser = fixturemanager.getfixturevalue("browser")
+        page = fixturemanager.getfixturevalue("page")
+
+        # Capture screenshot
+        screenshot_dir = "screenshots"
+        os.makedirs(screenshot_dir, exist_ok=True)
+        screenshot_path = f"{screenshot_dir}/failed-{item.nodeid}.png"
+        page.screenshot(path=screenshot_path)
+
+        # Optionally, log the screenshot path or further actions
+
+        print(f"\nScreenshot captured for {item.nodeid}: {screenshot_path}\n")
