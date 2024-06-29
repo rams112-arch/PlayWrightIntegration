@@ -50,17 +50,21 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest pytest-html playwright
+        pip install pytest pytest-html
 
-    - name: Install Playwright browsers
+    - name: Install Playwright and browsers
       run: |
+        pip install playwright
         python -m playwright install
+
+    - name: Set PYTHONPATH
+      run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
     - name: Run Playwright tests on ${{ matrix.browser }}
       env:
         PLAYWRIGHT_BROWSERS_PATH: 0
       run: |
-        pytest tests --html=report_${{ matrix.browser }}.html --self-contained-html
+        pytest --html=report_${{ matrix.browser }}.html --self-contained-html
 
     - name: Upload test reports
       uses: actions/upload-artifact@v2
