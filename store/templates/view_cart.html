@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Cart</title>
+</head>
+<body>
+    <h1>Cart</h1>
+    <ul>
+        {% for product in cart_products %}
+        <li>{{ product.name }} - {{ product.description }} - Quantity: {{ session['cart'][product.id|string] }}</li>
+        {% else %}
+        <li>Your cart is empty.</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('product_listing') }}">Back to Product Listing</a>
+</body>
+</html>
